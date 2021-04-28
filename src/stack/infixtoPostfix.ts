@@ -1,4 +1,4 @@
-import { Node, Stack } from "./buildStack";
+import { Stack } from "./buildStack";
 // higher value means higher prec
 const prec = (char: any) => {
   switch (char) {
