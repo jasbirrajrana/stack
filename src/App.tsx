@@ -1,26 +1,49 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from "react";
+import { Button, Heading, Spinner } from "@chakra-ui/react";
+import { Form, Formik } from "formik";
+import InputField from "./component/InputField";
+import Wrapper from "./component/Wrapper";
 
-function App() {
+import { convert } from "./stack/infixtoPostfix";
+interface AppProps {}
+
+const App: React.FC<AppProps> = () => {
+  const [result, setResult] = useState("");
+  const [loading, setLoading] = useState(false);
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
+    <>
+      <Wrapper>
+        <Heading isTruncated>Stack Algorithm</Heading>
+        <Formik
+          initialValues={{ exp: "" }}
+          onSubmit={(values) => {
+            setLoading(true);
+            setResult(convert(values.exp));
+            setLoading(false);
+          }}
         >
-          Learn React
-        </a>
-      </header>
-    </div>
+          {({ isSubmitting }) => (
+            <Form>
+              <InputField
+                name="exp"
+                placeholder="Write Infix without space..."
+                label="Infix to Postfix"
+              />
+              <Button type="submit" mt={3} colorScheme="teal" variant="solid">
+                evaluate
+              </Button>
+            </Form>
+          )}
+        </Formik>
+        {loading ? (
+          <Spinner />
+        ) : (
+          <Heading size="lg" m={4}>
+            {result}
+          </Heading>
+        )}
+      </Wrapper>
+    </>
   );
-}
-
+};
 export default App;
